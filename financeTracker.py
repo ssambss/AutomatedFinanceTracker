@@ -1,10 +1,39 @@
 import gspread
 import pandas as pd
+import numpy as np
 import os
 from google.oauth2 import service_account
 from dotenv import load_dotenv
 
 load_dotenv()
+
+def set_transaction_categories(df, categories): 
+    for title in df['Otsikko']:
+        category_set = False
+        for category, keywords in categories.items():
+            print(category)
+            for keyword in keywords:
+                if keyword in title:
+                    set_categories.append(category)
+                    category_set = True
+                    break
+        
+        if keyword not in title and category_set == False:
+            set_categories.append('Muu')
+
+def set_savings_to_positive(df):
+    for index, row in df.iterrows():
+        if row['Määrä'] < 0 and row['Kategoria'] == 'Säästö':
+            df.at[index, 'Määrä'] = df.at[index, 'Määrä'] * -1
+                
+set_categories = []
+
+categories = {"Säästö": [os.getenv('saving_account')],
+            "Tulo": [os.getenv('salary')],
+            "Ruoka": ["LIDL", "K-MARKET", "K-CITYMARKET", "PRISMA", "S-MARKET", "K-SUPERMARKET", "ALEPA", "SALE"], 
+            "Laskut": ["ELISA", "SATS", "VIHREÄ ÄLYENERGIA", "DNA", "SPOTIFY", "INSINÖÖRILIITTO", "TURVA"],
+            "Vuokra": [os.getenv('rent')]
+            }
 
 # Define the path to your CSV file
 csv_file_path = input('Enter the path to the CSV file: ')
@@ -17,6 +46,23 @@ df = pd.read_csv(csv_file_path, delimiter=';', usecols=selected_columns)
 
 # Convert the values in amount column from string to float
 df.Määrä = df.Määrä.str.replace(',', '.').astype(float)
+
+# Call the function to set transaction categories
+set_transaction_categories(df, categories)
+
+df['Kategoria'] = set_categories
+
+print(df)
+
+set_savings_to_positive(df)
+
+print(df)
+
+total_sum = df['Määrä'].sum()
+
+
+
+print(f'Total sum of all transactions: {total_sum}')
 
 # Column names to be inserted into the first row of the Google Sheets worksheet
 columns = [df.columns.values.tolist()]
