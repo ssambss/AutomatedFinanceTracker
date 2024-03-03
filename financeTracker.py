@@ -11,7 +11,6 @@ def set_transaction_categories(df, categories):
     for title in df['Otsikko']:
         category_set = False
         for category, keywords in categories.items():
-            print(category)
             for keyword in keywords:
                 if keyword in title:
                     set_categories.append(category)
@@ -21,11 +20,32 @@ def set_transaction_categories(df, categories):
         if keyword not in title and category_set == False:
             set_categories.append('Muu')
 
+
 def set_savings_to_positive(df):
     for index, row in df.iterrows():
         if row['Määrä'] < 0 and row['Kategoria'] == 'Säästö':
             df.at[index, 'Määrä'] = df.at[index, 'Määrä'] * -1
-                
+
+
+def calculate_total_monthly_sum(df):
+    return df['Määrä'].sum()
+
+
+def calculate_total_sum_per_category(df):
+    return df.groupby('Kategoria')['Määrä'].sum().reset_index()
+
+
+def load_csv_file(csv_file_path, selected_columns):
+    return pd.read_csv(csv_file_path, delimiter=';', usecols=selected_columns)
+
+
+# Insert the column names and values into a list of lists to use with gspread update method
+def prepare_data_for_google_sheets(df):
+    columns = [df.columns.values.tolist()]
+    values = df.values.tolist()
+    return columns, values
+
+
 set_categories = []
 
 categories = {"Säästö": [os.getenv('saving_account')],
@@ -35,63 +55,84 @@ categories = {"Säästö": [os.getenv('saving_account')],
             "Vuokra": [os.getenv('rent')]
             }
 
-# Define the path to your CSV file
+
+""" 
+    
+    Load the CSV file into a pandas dataframe, set categories for transactions and create dataframes for the total sum per category and monthly total sum 
+
+"""
+
 csv_file_path = input('Enter the path to the CSV file: ')
 
 # Define the columns to be imported from the CSV file
 selected_columns = [0, 1, 5]
 
-# Load the CSV file into a Pandas DataFrame
-df = pd.read_csv(csv_file_path, delimiter=';', usecols=selected_columns)
+df = load_csv_file(csv_file_path, selected_columns)
 
 # Convert the values in amount column from string to float
 df.Määrä = df.Määrä.str.replace(',', '.').astype(float)
 
-# Call the function to set transaction categories
 set_transaction_categories(df, categories)
 
 df['Kategoria'] = set_categories
 
-print(df)
+#set_savings_to_positive(df)
 
-set_savings_to_positive(df)
+df_categories_total = calculate_total_sum_per_category(df)
 
-print(df)
+monthly_total_sum = calculate_total_monthly_sum(df)
 
-total_sum = df['Määrä'].sum()
+monthly_total_df = pd.DataFrame({'Total': [monthly_total_sum]})
 
 
+"""
+    
+    Column names and values are prepared for Google Sheets import
 
-print(f'Total sum of all transactions: {total_sum}')
+"""
 
-# Column names to be inserted into the first row of the Google Sheets worksheet
-columns = [df.columns.values.tolist()]
+columns = prepare_data_for_google_sheets(df)[0]
 
-# Column values to be inserted into the Google Sheets worksheet
-values = df.values.tolist()
+values = prepare_data_for_google_sheets(df)[1]
 
-# Define the path to your Google Sheets credentials JSON file
+categories_total_columns = prepare_data_for_google_sheets(df_categories_total)[0]
+
+categories_total_values = prepare_data_for_google_sheets(df_categories_total)[1]
+
+monthly_total_column = prepare_data_for_google_sheets(monthly_total_df)[0]
+
+monthly_total_value = prepare_data_for_google_sheets(monthly_total_df)[1]
+
+
+""" 
+
+    Import the data to Google Sheets
+
+"""
+
 credentials_file_path =  os.getenv('credentials_path')
 
-# Define the name of the Google Sheets spreadsheet
 spreadsheet_name = 'Automated Finance Tracker'
 
-# Define the name of the worksheet within the Google Sheets spreadsheet
 worksheet_name = input('Enter the name of the worksheet: ')
 
-# Load the credentials from the JSON file
+
+# Load the credentials from the JSON file and set the scopes
 credentials = service_account.Credentials.from_service_account_file(credentials_file_path, scopes=['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/drive.file'])
 
-# Authorize the credentials
 client = gspread.Client(auth=credentials)
 
-# Open the Google Sheets spreadsheet
+
 spreadsheet = client.open(spreadsheet_name)
 
-# Select the worksheet within the spreadsheet
 worksheet = spreadsheet.worksheet(worksheet_name)
 
-# Write the data to the Google Sheets worksheet
+
 worksheet.update(columns + values)
+
+worksheet.update(categories_total_columns + categories_total_values, 'G5')
+
+worksheet.update(monthly_total_column + monthly_total_value, 'H12')
+
 
 print('Data has been successfully imported to Google Sheets.')
