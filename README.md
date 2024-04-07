@@ -5,3 +5,7 @@ This project is a finance tracker that automates the process of importing and an
 ## Features
 
 - **Expense Tracking**: Automatically track expenses and savings from bank transactions csv files.
+- **Moving and renaming transaction files**: Automatically moves transaction files from e.g. downloads inside the project's "Files" -folder and renames them <bank-year-month>.
+
+
+
