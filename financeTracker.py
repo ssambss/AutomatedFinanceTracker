@@ -10,7 +10,7 @@ from pathlib import Path
 
 load_dotenv()
 
-def set_transaction_categories(df, categories) -> None: 
+def set_transaction_categories(df, categories: dict) -> None: 
     for title in df['Otsikko']:
         category_set = False
         for category, keywords in categories.items():
@@ -20,7 +20,7 @@ def set_transaction_categories(df, categories) -> None:
                     category_set = True
                     break
         
-        if keyword not in title and category_set == False:
+        if category_set == False:
             set_categories.append('Muu')
 
 
@@ -61,6 +61,10 @@ def csv_files_to_manipulate() -> list:
     
     return chosen_csv_files_paths
 
+def set_budget_for_category(category: str, budget: float) -> None:
+    
+    budgets.update({category: budget})
+
 
 credentials_file_path =  os.getenv('credentials_path')
 spreadsheet_name = 'Automated Finance Tracker'
@@ -78,12 +82,17 @@ categories = {"Säästö": [os.getenv('saving_account')],
             "Vuokra": [os.getenv('rent')]
             }
 
+budgets = {}
 
-""" 
+[set_budget_for_category(category, 0) for category in categories.keys()]
+
+print(budgets)
+
+
     
-    Load the CSV file into a pandas dataframe, set categories for transactions and create dataframes for the total sum per category and monthly total sum 
+    #Load the CSV file into a pandas dataframe, set categories for transactions and create dataframes for the total sum per category and monthly total sum 
 
-"""
+
 chosen_csv_files_paths = []
 csv_files = [] 
 chosen_csv_files_paths = csv_files_to_manipulate()
@@ -94,13 +103,9 @@ selected_columns = [0, 1, 5]
 for i in range(len(chosen_csv_files_paths)):
     
     df = load_csv_file(chosen_csv_files_paths[i], selected_columns)
-
-    # Convert the values in amount column from string to float
     df.Määrä = df.Määrä.str.replace(',', '.').astype(float)
-
     set_categories = []
     set_transaction_categories(df, categories)
-
     df['Kategoria'] = set_categories
 
     #set_savings_to_positive(df)
@@ -112,11 +117,11 @@ for i in range(len(chosen_csv_files_paths)):
     monthly_total_df = pd.DataFrame({'Total': [monthly_total_sum]})
 
 
-    """
+    
         
-        Column names and values are prepared for Google Sheets import
+        #Column names and values are prepared for Google Sheets import
 
-    """
+    
 
     columns = prepare_data_for_google_sheets(df)[0]
 
@@ -130,11 +135,11 @@ for i in range(len(chosen_csv_files_paths)):
 
     monthly_total_value = prepare_data_for_google_sheets(monthly_total_df)[1]
 
-    """ 
+    
 
-        Import the data to Google Sheets
+        #Import the data to Google Sheets
 
-    """
+    
 
     file_name_stripped = chosen_csv_files_paths[i].split('\\')[-1].split('.')[0]
 
