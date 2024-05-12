@@ -7,9 +7,8 @@ class DataManipulator:
     A class for manipulating the data from the CSV files.
 
     """
-    def __init__(self, categories: dict, budgets: dict, finance_file_folder: str ) -> None:
+    def __init__(self, categories: dict, finance_file_folder: str ) -> None:
         self.categories = categories
-        self.budgets = budgets
         self.finance_file_folder = finance_file_folder
         self.set_categories = []
         self.chosen_csv_files_paths = []

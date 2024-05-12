@@ -30,7 +30,7 @@ class FinanceTracker:
             if category == 'Tulo':
                 continue
             budget = float(input(f'Enter the budget for {category}: '))
-            self.set_budget_for_category(category, budget)
+            self.set_budget_for_category(category, budget)        
 
     def set_budget_for_category(self, category: str, budget: float) -> None:    
         self.budgets.update({category: budget})

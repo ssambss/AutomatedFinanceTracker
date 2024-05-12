@@ -6,6 +6,10 @@ __pycache__/
 # CSV files
 *.CSV
 
+# Config files
+*.ini
+*config.py
+
 # C extensions
 *.so
 
