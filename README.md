@@ -41,7 +41,7 @@ Here's how to setup a Google project for this to work.
 
 #### Filling out the Config class with wanted information
 
-1. Open the "config_example.py" file.
+1. Open the "config_example.py" file and name it "config.py".
 2. Look for the "create_config" function and replace the example values with your own values where needed:
    ![image](https://github.com/ssambss/AutomatedFinanceTracker/assets/61969837/2558f197-2c31-4ca8-8776-e620f6c27b39)
 3. "Muu" can be left empty, whatever is not specified in the other categories will be added to this category.
