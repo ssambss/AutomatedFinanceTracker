@@ -19,7 +19,7 @@ def main():
     
     source_dir = config_values.get('source_dir')  
     dest_dir = config_values.get('dest_dir')
-    rename_files_dir = os.getcwd() + r'\Files'
+    finance_file_folder = os.getcwd() + r'\Files'
 
     bank_name = config_values.get('bank_name')
     file_prefix = config_values.get('file_prefix')
@@ -28,9 +28,8 @@ def main():
     credentials_file_path =  config_values.get('credentials_file_path')
     spreadsheet_name = config_values.get('spreadsheet_name')
     categories = eval(config_values.get('categories'))
-    finance_file_folder = os.getcwd() + '\Files'
     file_mover = FileMover(source_dir, dest_dir)
-    file_renamer = FileRenamer(rename_files_dir, bank_name)
+    file_renamer = FileRenamer(finance_file_folder, bank_name)
     file_mover.move_files(file_extension, file_prefix)
     file_renamer.rename_file(file_prefix)
 

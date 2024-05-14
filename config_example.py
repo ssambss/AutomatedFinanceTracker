@@ -24,8 +24,8 @@ class Config:
                                               },
                                   'categories': {"Säästö": ['<SAVINGS_ACCOUNT_NAME>'],
                                                  "Tulo": ['<INCOME_SOURCE>'],
-                                                 "Ruoka": ["LIDL", "K-MARKET", "K-CITYMARKET", "PRISMA", "S-MARKET", "K-SUPERMARKET", "ALEPA", "SALE"], 
-                                                 "Laskut": ["ELISA", "SATS", "VIHREÄ ÄLYENERGIA", "DNA", "SPOTIFY", "INSINÖÖRILIITTO", "Keskinäinen Vakuutusyhtiö", "Helen Oy", "SANOMA"],
+                                                 "Ruoka": ["<SUPERMARKET-X", "SUPERMARKET-Y", "SUPERMARKET-Z"], 
+                                                 "Laskut": ["<PHONE>", "<GYM>", "<ELECTRICITY>", "<INTERNET>"],
                                                  "Vuokra": ['<RENT_RECIPIENT>'],
                                                  "Muu": []
                                                  }
