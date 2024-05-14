@@ -2,6 +2,8 @@
 
 This project is a finance tracker that automates the process of importing and analyzing financial data from CSV files. It uses the Google Sheets API to import the data into a Google Sheets spreadsheet and perform calculations on the data.
 
+---
+
 ## Features
 
 - **Expense Tracking**: Automatically track expenses and savings from bank transactions csv files.
@@ -11,6 +13,8 @@ This project is a finance tracker that automates the process of importing and an
 ### Could be added
 - **Financial Reports**: Generate detailed reports to analyze spending patterns, identify areas for improvement, and make informed financial decisions.
 - **Formatting**: Color cells based on values (e.g. if food category's budget has gone over for the month, color it red).
+
+---
 
 ### Prerequisites
 
@@ -41,6 +45,8 @@ Here's how to setup a Google project for this to work.
 2. Look for the "create_config" function and replace the example values with your own values where needed:
    ![image](https://github.com/ssambss/AutomatedFinanceTracker/assets/61969837/2558f197-2c31-4ca8-8776-e620f6c27b39)
 3. "Muu" can be left empty, whatever is not specified in the other categories will be added to this category.
+
+---
 
 ## Usage
 
