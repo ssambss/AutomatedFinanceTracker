@@ -31,7 +31,7 @@ class Config:
                                                  }
                                   }
         
-        with open(config_file, 'w') as configfile:
+        with open(config_file, 'w', encoding='utf-8') as configfile:
             self.config.write(configfile)
 
     def read_config(self, config_file) -> dict:
