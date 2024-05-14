@@ -5,6 +5,7 @@ __pycache__/
 
 # CSV files
 *.CSV
+testing.py
 
 # Config files
 *.ini
