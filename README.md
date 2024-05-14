@@ -46,6 +46,8 @@ Here's how to setup a Google project for this to work.
    ![image](https://github.com/ssambss/AutomatedFinanceTracker/assets/61969837/2558f197-2c31-4ca8-8776-e620f6c27b39)
 3. "Muu" can be left empty, whatever is not specified in the other categories will be added to this category.
 
+NOTE: I'd assume the data columns banks provide in their csv's differ from bank to bank, hence the values in DataInserter class' self.selected_columns needs to be changed based on which data columns you want to include from the csv files. Currently it is curated for the data that Nordea provides.
+
 ---
 
 ## Usage
